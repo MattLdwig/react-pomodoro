@@ -4,8 +4,8 @@ import './App.css';
 
 import Time from './Components/Time'
 
-const twentyToMilli = 2000;
-const fiveToMilli = 3000;
+let twentyToMilli = 1500000;
+let fiveToMilli = 30000;
 
 class App extends Component {
   constructor() {
@@ -13,7 +13,8 @@ class App extends Component {
     this.state = {
       time: this.getTime(twentyToMilli),
       workTime: true,
-      interval: null
+      interval: null,
+      currentPhase: 1
     }
 
     this.getTime = this.getTime.bind(this);
@@ -22,7 +23,10 @@ class App extends Component {
     this.resetTimer = this.resetTimer.bind(this);
     this.updateDisplay = this.updateDisplay.bind(this);
     this.switchToNextPhase = this.switchToNextPhase.bind(this);
-
+    this.incrementWorkSession = this.incrementWorkSession.bind(this);
+    this.incrementBreakSession = this.incrementBreakSession.bind(this);
+    this.decrementWorkSession = this.decrementWorkSession.bind(this);
+    this.decrementBreakSession = this.decrementBreakSession.bind(this);
   }
 
   startTimer() {
@@ -67,13 +71,42 @@ class App extends Component {
     return {total, min, sec};
   }
 
+  incrementWorkSession() {
+    this.setState({
+      time: this.getTime(twentyToMilli += 60000)
+    })
+  }
+
+  incrementBreakSession() {
+    this.setState({
+      time: this.getTime(fiveToMilli += 60000)
+    })
+  }
+
+  decrementWorkSession() {
+    this.setState({
+      time: this.getTime(twentyToMilli -= 60000)
+    })
+  }
+
+  decrementBreakSession() {
+    this.setState({
+      time: this.getTime(fiveToMilli -= 60000)
+    })
+  }
+
+
   render() {
     return (
       <div className="App">
-      <Time time={this.state.time} />
-      <button onClick={this.startTimer}>Start</button>
-      <button onClick={this.pauseTimer}>Pause</button>
-      <button onClick={this.resetTimer}>Reset</button>
+        <Time time={this.state.time} session={this.getTime(fiveToMilli)} />
+        <button onClick={this.startTimer}>Start</button>
+        <button onClick={this.pauseTimer}>Pause</button>
+        <button onClick={this.resetTimer}>Reset</button>
+        <button onClick={this.incrementWorkSession}>Increment work Session</button>
+        <button onClick={this.incrementBreakSession}>Increment break Session</button>
+        <button onClick={this.decrementBreakSession}>Decrement break Session</button>
+        <button onClick={this.decrementWorkSession}>Decrement work Session</button>
       </div>
     );
   }
