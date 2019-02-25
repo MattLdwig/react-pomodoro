@@ -13,11 +13,13 @@ class App extends Component {
     this.state = {
       time: this.getTime(twentyToMilli),
       workTime: true,
-      inverval: null
+      interval: null
     }
 
     this.getTime = this.getTime.bind(this);
     this.startTimer = this.startTimer.bind(this);
+    this.pauseTimer = this.pauseTimer.bind(this);
+    this.resetTimer = this.resetTimer.bind(this);
     this.updateDisplay = this.updateDisplay.bind(this);
     this.switchToNextPhase = this.switchToNextPhase.bind(this);
 
@@ -27,6 +29,21 @@ class App extends Component {
     this.updateDisplay();
     this.setState({ interval: setInterval(this.updateDisplay, 1000) })
   }
+
+  pauseTimer() {
+    clearInterval(this.state.interval);
+    this.setState({ interval: null })
+  }
+
+  resetTimer() {
+    clearInterval(this.state.interval);
+    this.setState({
+      time: this.getTime(twentyToMilli),
+      workTime: true,
+      interval: null
+    })
+  }
+
 
   updateDisplay() {
     if (this.state.time.total > 0) {
@@ -54,7 +71,9 @@ class App extends Component {
     return (
       <div className="App">
       <Time time={this.state.time} />
-      <button onClick={this.startTimer}>Click me</button>
+      <button onClick={this.startTimer}>Start</button>
+      <button onClick={this.pauseTimer}>Pause</button>
+      <button onClick={this.resetTimer}>Reset</button>
       </div>
     );
   }
