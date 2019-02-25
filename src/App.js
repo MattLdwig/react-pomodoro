@@ -11,7 +11,9 @@ class App extends Component {
   constructor() {
     super();
     this.state = {
-      initTimer: this.getTime(twentyToMilli)
+      initTimer: this.getTime(twentyToMilli),
+      initBreak: this.getTime(fiveToMilli),
+      workTime: true
     }
 
     this.getTime = this.getTime.bind(this);
@@ -25,32 +27,42 @@ class App extends Component {
   }
 
   updateDisplay() {
-    const min = this.state.initTimer.min,
-          sec = this.state.initTimer.sec,
-          total = this.state.initTimer.tTime;
-      setInterval(() => {
-        const tTime = this.state.initTimer.tTime - 1000;
-
-        console.log(total);
-
-        this.setState({
-          initTimer: {tTime, min, sec}
-        })
-      }, 1000);
+    if (this.state.workTime) {
+      const min = this.state.initTimer.min,
+            sec = this.state.initTimer.sec,
+            total = this.state.initTimer.total;
+        setInterval(() => {
+          const total = this.state.initTimer.total - 1000;   
+          this.setState({
+            initTimer: {total, min, sec}
+          })
+        }, 1000);
+    } else {
+      const min = this.state.initBreak.min,
+            sec = this.state.initBreak.sec,
+            total = this.state.initBreak.total;
+        setInterval(() => {
+          const total = this.state.initBreak.total - 1000;   
+          this.setState({
+            initBreak: {total, min, sec}
+          })
+        }, 1000);
+    }
   }
+
 
   getTime(time) {
     const min = Math.floor(time / 1000 / 60 % 60);
     const sec = Math.floor(time / 1000 % 60);
-    const tTime = time;
-    return {tTime, min, sec};
+    const total = time;
+    return {total, min, sec};
   }
 
   render() {
     return (
       <div className="App">
-      <Time time={this.state.initTimer} />
-      <button onClick={this.updateDisplay}>Click me</button>
+      <Time time={this.state.workTime ? this.state.initTimer : this.state.initBreak} />
+      <button onClick={this.startTimer}>Click me</button>
       </div>
     );
   }
