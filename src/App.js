@@ -4,51 +4,43 @@ import './App.css';
 
 import Time from './Components/Time'
 
-const twentyToMilli = 1500000;
-const fiveToMilli = 300000;
+const twentyToMilli = 2000;
+const fiveToMilli = 3000;
 
 class App extends Component {
   constructor() {
     super();
     this.state = {
-      initTimer: this.getTime(twentyToMilli),
-      initBreak: this.getTime(fiveToMilli),
-      workTime: true
+      time: this.getTime(twentyToMilli),
+      workTime: true,
+      inverval: null
     }
 
     this.getTime = this.getTime.bind(this);
     this.startTimer = this.startTimer.bind(this);
     this.updateDisplay = this.updateDisplay.bind(this);
+    this.switchToNextPhase = this.switchToNextPhase.bind(this);
 
   }
 
   startTimer() {
     this.updateDisplay();
+    this.setState({ interval: setInterval(this.updateDisplay, 1000) })
   }
 
   updateDisplay() {
-    if (this.state.workTime) {
-      const min = this.state.initTimer.min,
-            sec = this.state.initTimer.sec,
-            total = this.state.initTimer.total;
-        setInterval(() => {
-          const total = this.state.initTimer.total - 1000;   
-          this.setState({
-            initTimer: {total, min, sec}
-          })
-        }, 1000);
+    if (this.state.time.total > 0) {
+      let time = this.getTime(this.state.time.total - 1000);
+      this.setState({ time })
     } else {
-      const min = this.state.initBreak.min,
-            sec = this.state.initBreak.sec,
-            total = this.state.initBreak.total;
-        setInterval(() => {
-          const total = this.state.initBreak.total - 1000;   
-          this.setState({
-            initBreak: {total, min, sec}
-          })
-        }, 1000);
+      this.switchToNextPhase();
     }
   }
+
+  switchToNextPhase() {
+    this.state.workTime ? this.setState({ time: this.getTime(fiveToMilli), workTime: false }) : this.setState({ time: this.getTime(twentyToMilli), workTime: true })
+  }
+
 
 
   getTime(time) {
@@ -61,7 +53,7 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-      <Time time={this.state.workTime ? this.state.initTimer : this.state.initBreak} />
+      <Time time={this.state.time} />
       <button onClick={this.startTimer}>Click me</button>
       </div>
     );
