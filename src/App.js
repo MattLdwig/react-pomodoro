@@ -4,8 +4,8 @@ import './App.css';
 
 import Time from './Components/Time'
 
-let twentyToMilli = 1500000;
-let fiveToMilli = 30000;
+let twentyToMilli = 10000;
+let fiveToMilli = 300000;
 
 class App extends Component {
   constructor() {
@@ -14,7 +14,8 @@ class App extends Component {
       time: this.getTime(twentyToMilli),
       workTime: true,
       interval: null,
-      currentPhase: 1
+      currentPhase: 1,
+      breakTimeDisplayed : this.getTime(fiveToMilli)
     }
 
     this.getTime = this.getTime.bind(this);
@@ -32,6 +33,7 @@ class App extends Component {
   startTimer() {
     this.updateDisplay();
     this.setState({ interval: setInterval(this.updateDisplay, 1000) })
+    console.log(fiveToMilli);
   }
 
   pauseTimer() {
@@ -62,8 +64,6 @@ class App extends Component {
     this.state.workTime ? this.setState({ time: this.getTime(fiveToMilli), workTime: false }) : this.setState({ time: this.getTime(twentyToMilli), workTime: true })
   }
 
-
-
   getTime(time) {
     const min = Math.floor(time / 1000 / 60 % 60);
     const sec = Math.floor(time / 1000 % 60);
@@ -72,26 +72,30 @@ class App extends Component {
   }
 
   incrementWorkSession() {
+    twentyToMilli = twentyToMilli + 60000;
     this.setState({
-      time: this.getTime(twentyToMilli += 60000)
+      time: this.getTime(twentyToMilli)
     })
   }
 
   incrementBreakSession() {
+    fiveToMilli = fiveToMilli + 60000;
     this.setState({
-      time: this.getTime(fiveToMilli += 60000)
+      breakTimeDisplayed: this.getTime(fiveToMilli)
     })
   }
 
   decrementWorkSession() {
+    twentyToMilli = twentyToMilli - 60000;
     this.setState({
-      time: this.getTime(twentyToMilli -= 60000)
+      time: this.getTime(twentyToMilli)
     })
   }
 
   decrementBreakSession() {
+    fiveToMilli = fiveToMilli - 60000;
     this.setState({
-      time: this.getTime(fiveToMilli -= 60000)
+      breakTimeDisplayed: this.getTime(fiveToMilli)
     })
   }
 
@@ -99,7 +103,7 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <Time time={this.state.time} session={this.getTime(fiveToMilli)} />
+        <Time time={this.state.time} session={this.state.breakTimeDisplayed} />
         <button onClick={this.startTimer}>Start</button>
         <button onClick={this.pauseTimer}>Pause</button>
         <button onClick={this.resetTimer}>Reset</button>
