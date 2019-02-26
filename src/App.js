@@ -15,12 +15,12 @@ class App extends Component {
       workTime: true,
       interval: null,
       currentPhase: 1,
-      breakTimeDisplayed : this.getTime(fiveToMilli)
+      breakTimeDisplayed : this.getTime(fiveToMilli),
+      isOn: false
     }
 
     this.getTime = this.getTime.bind(this);
     this.startTimer = this.startTimer.bind(this);
-    this.pauseTimer = this.pauseTimer.bind(this);
     this.resetTimer = this.resetTimer.bind(this);
     this.updateDisplay = this.updateDisplay.bind(this);
     this.switchToNextPhase = this.switchToNextPhase.bind(this);
@@ -31,14 +31,16 @@ class App extends Component {
   }
 
   startTimer() {
-    this.updateDisplay();
-    this.setState({ interval: setInterval(this.updateDisplay, 1000) })
-    console.log(fiveToMilli);
-  }
-
-  pauseTimer() {
-    clearInterval(this.state.interval);
-    this.setState({ interval: null })
+    if(!this.state.isOn) {
+      this.updateDisplay();
+      this.setState({ 
+        interval: setInterval(this.updateDisplay, 1000),
+        isOn: true
+       })
+    } else {
+      clearInterval(this.state.interval);
+      this.setState({ interval: null, isOn: false })
+    }
   }
 
   resetTimer() {
@@ -103,14 +105,15 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <Time time={this.state.time} session={this.state.breakTimeDisplayed} />
-        <button onClick={this.startTimer}>Start</button>
-        <button onClick={this.pauseTimer}>Pause</button>
-        <button onClick={this.resetTimer}>Reset</button>
-        <button onClick={this.incrementWorkSession}>Increment work Session</button>
-        <button onClick={this.incrementBreakSession}>Increment break Session</button>
-        <button onClick={this.decrementBreakSession}>Decrement break Session</button>
-        <button onClick={this.decrementWorkSession}>Decrement work Session</button>
+        <Time time={this.state.time} break={this.state.breakTimeDisplayed} />
+        <div className="controls">
+          <button onClick={this.startTimer} id="start_stop">Start</button>
+          <button onClick={this.resetTimer}>Reset</button>
+          <button onClick={this.incrementWorkSession} id="session-increment">Increment work Session</button>
+          <button onClick={this.incrementBreakSession} id="break-increment">Increment break Session</button>
+          <button onClick={this.decrementBreakSession} id="break-decrement">Decrement break Session</button>
+          <button onClick={this.decrementWorkSession} id="session-decrement">Decrement work Session</button>
+        </div>
       </div>
     );
   }

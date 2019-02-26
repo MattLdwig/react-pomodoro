@@ -3,8 +3,8 @@ import React, { Component } from 'react';
 const Time = (props) => {
     return (
       <div className="timer">
-      <span className="time">{`${props.time.min}: ${props.time.sec}`}</span><br/>
-      <span className="break">{`${props.session.min} : ${props.session.sec}`}</span>
+      <span className="time" id="session-label">{`${props.time.min}: ${props.time.sec}`}</span><br/>
+      <span className="break" id="break-label">{`${props.break.min} : ${props.break.sec}`}</span>
       </div>
     );
 }
