@@ -67,35 +67,35 @@ class App extends Component {
   }
 
   getTime(time) {
-    const min = Math.floor(time / 1000 / 60 % 60);
-    const sec = Math.floor(time / 1000 % 60);
+    const min = Math.floor(time / 1000 / 60 % 60) < 10 ? '0' + Math.floor(time / 1000 / 60 % 60) : Math.floor(time / 1000 / 60 % 60);
+    const sec = Math.floor(time / 1000 % 60) < 10 ? '0' + Math.floor(time / 1000 % 60) : Math.floor(time / 1000 % 60);
     const total = time;
     return {total, min, sec};
   }
 
   incrementWorkSession() {
-    twentyToMilli = twentyToMilli + 60000;
+    if (twentyToMilli < 3600000) { twentyToMilli = twentyToMilli + 60000 }
     this.setState({
       time: this.getTime(twentyToMilli)
     })
   }
 
   incrementBreakSession() {
-    fiveToMilli = fiveToMilli + 60000;
+    if (fiveToMilli < 3600000) { fiveToMilli = fiveToMilli + 60000 }
     this.setState({
       breakTimeDisplayed: this.getTime(fiveToMilli)
     })
   }
 
   decrementWorkSession() {
-    twentyToMilli = twentyToMilli - 60000;
+    if (twentyToMilli > 60000) { twentyToMilli = twentyToMilli - 60000 }
     this.setState({
       time: this.getTime(twentyToMilli)
     })
   }
 
   decrementBreakSession() {
-    fiveToMilli = fiveToMilli - 60000;
+    if (fiveToMilli > 60000) { fiveToMilli = fiveToMilli - 60000 }
     this.setState({
       breakTimeDisplayed: this.getTime(fiveToMilli)
     })
@@ -108,7 +108,7 @@ class App extends Component {
         <Time time={this.state.time} break={this.state.breakTimeDisplayed} />
         <div className="controls">
           <button onClick={this.startTimer} id="start_stop">Start</button>
-          <button onClick={this.resetTimer}>Reset</button>
+          <button onClick={this.resetTimer} id="reset">Reset</button>
           <button onClick={this.incrementWorkSession} id="session-increment">Increment work Session</button>
           <button onClick={this.incrementBreakSession} id="break-increment">Increment break Session</button>
           <button onClick={this.decrementBreakSession} id="break-decrement">Decrement break Session</button>
