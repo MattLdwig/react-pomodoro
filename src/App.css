@@ -8,6 +8,20 @@
   height: 100vh;
 }
 
-.time {
-  font-size: 40px;
+.info {
+  font-size: 24px;
+}
+
+.session,
+.break {
+  display: inline-block;
+}
+
+.session {
+  margin-right: 20px;
+}
+
+#session-length,
+#break-length {
+  font-size: 32px;
 }

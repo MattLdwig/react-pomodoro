@@ -4,7 +4,7 @@ import './App.css';
 
 import Time from './Components/Time'
 
-let twentyToMilli = 10000;
+let twentyToMilli = 1500000;
 let fiveToMilli = 300000;
 
 class App extends Component {
@@ -15,11 +15,13 @@ class App extends Component {
       workTime: true,
       interval: null,
       currentPhase: 1,
-      breakTimeDisplayed : this.getTime(fiveToMilli),
+      breakTimeDisplayed : this.getTimeDisplayed(fiveToMilli),
+      workTimeDisplayed: this.getTimeDisplayed(twentyToMilli),
       isOn: false
     }
 
     this.getTime = this.getTime.bind(this);
+    this.getTimeDisplayed = this.getTimeDisplayed.bind(this);
     this.startTimer = this.startTimer.bind(this);
     this.resetTimer = this.resetTimer.bind(this);
     this.updateDisplay = this.updateDisplay.bind(this);
@@ -45,10 +47,15 @@ class App extends Component {
 
   resetTimer() {
     clearInterval(this.state.interval);
+    twentyToMilli = 1500000
+    fiveToMilli = 300000
     this.setState({
       time: this.getTime(twentyToMilli),
+      breakTimeDisplayed : this.getTimeDisplayed(fiveToMilli),
+      workTimeDisplayed: this.getTimeDisplayed(twentyToMilli),
       workTime: true,
-      interval: null
+      interval: null,
+      isOn: false
     })
   }
 
@@ -67,16 +74,23 @@ class App extends Component {
   }
 
   getTime(time) {
-    const min = Math.floor(time / 1000 / 60 % 60) < 10 ? '0' + Math.floor(time / 1000 / 60 % 60) : Math.floor(time / 1000 / 60 % 60);
-    const sec = Math.floor(time / 1000 % 60) < 10 ? '0' + Math.floor(time / 1000 % 60) : Math.floor(time / 1000 % 60);
-    const total = time;
+    let min = Math.floor(time / 1000 / 60 % 60);
+    let sec = Math.floor(time / 1000 % 60);
+    let total = time;
+    if (time === 3600000) {min = 60; sec = 0;} 
     return {total, min, sec};
   }
 
+  getTimeDisplayed(time) {
+    const min = Math.floor(time / 1000 / 60 % 60);
+    return {min}
+  }
+
   incrementWorkSession() {
-    if (twentyToMilli < 3600000) { twentyToMilli = twentyToMilli + 60000 }
+    if (twentyToMilli < 3600000) { twentyToMilli = twentyToMilli + 60000 } else {  console.log(twentyToMilli);}
     this.setState({
-      time: this.getTime(twentyToMilli)
+      time: this.getTime(twentyToMilli),
+      workTimeDisplayed: this.getTime(twentyToMilli)
     })
   }
 
@@ -90,7 +104,8 @@ class App extends Component {
   decrementWorkSession() {
     if (twentyToMilli > 60000) { twentyToMilli = twentyToMilli - 60000 }
     this.setState({
-      time: this.getTime(twentyToMilli)
+      time: this.getTime(twentyToMilli),
+      workTimeDisplayed: this.getTime(twentyToMilli)
     })
   }
 
@@ -105,7 +120,11 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <Time time={this.state.time} break={this.state.breakTimeDisplayed} />
+        <Time 
+          time={this.state.time} 
+          break={this.state.breakTimeDisplayed} 
+          session={this.state.workTimeDisplayed}
+          sessionInitialized={this.state.isOn} />
         <div className="controls">
           <button onClick={this.startTimer} id="start_stop">Start</button>
           <button onClick={this.resetTimer} id="reset">Reset</button>
