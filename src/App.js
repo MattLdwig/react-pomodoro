@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faPlay, faRedo, faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-icons'
+
 import './App.css';
 
 import Time from './Components/Time'
+import Infos from './Components/Infos'
 import Sound from './sound.wav'
 
 let twentyToMilli = 1500000;
@@ -15,7 +18,6 @@ class App extends Component {
       time: this.getTime(twentyToMilli),
       workTime: false,
       interval: null,
-      currentPhase: 1,
       breakTimeDisplayed : this.getTimeDisplayed(fiveToMilli),
       workTimeDisplayed: this.getTimeDisplayed(twentyToMilli),
       isOn: false
@@ -128,18 +130,22 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <Time 
-          time={this.state.time} 
-          break={this.state.breakTimeDisplayed} 
-          session={this.state.workTimeDisplayed}
-          sessionInitialized={this.state.workTime} />
+        <Time time={this.state.time} />
         <div className="controls">
-          <button onClick={this.startTimer} id="start_stop">Start</button>
-          <button onClick={this.resetTimer} id="reset">Reset</button>
-          <button onClick={this.incrementWorkSession} id="session-increment">Increment work Session</button>
-          <button onClick={this.incrementBreakSession} id="break-increment">Increment break Session</button>
-          <button onClick={this.decrementBreakSession} id="break-decrement">Decrement break Session</button>
-          <button onClick={this.decrementWorkSession} id="session-decrement">Decrement work Session</button>
+          <div className="controls--core">
+            <button onClick={this.startTimer} id="start_stop"><FontAwesomeIcon icon={faPlay} /></button>
+            <button onClick={this.resetTimer} id="reset"><FontAwesomeIcon icon={faRedo} /></button>
+          </div>
+          <div className="controls--custom">
+            <button onClick={this.incrementWorkSession} id="session-increment"><FontAwesomeIcon icon={faAngleUp} /> Work Session</button>
+            <button onClick={this.decrementWorkSession} id="session-decrement"><FontAwesomeIcon icon={faAngleDown} /> Work Session</button>
+            <button onClick={this.incrementBreakSession} id="break-increment"><FontAwesomeIcon icon={faAngleUp} /> Break Session</button>
+            <button onClick={this.decrementBreakSession} id="break-decrement"><FontAwesomeIcon icon={faAngleDown} /> Break Session</button>
+          </div>
+          <Infos           
+            break={this.state.breakTimeDisplayed} 
+            session={this.state.workTimeDisplayed}
+            sessionInitialized={this.state.workTime} />
           <audio id="beep" src={Sound}></audio>
         </div>
       </div>

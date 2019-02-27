@@ -8,8 +8,12 @@
   height: 100vh;
 }
 
+.time-left {
+  font-size: 4.209em;
+}
+
 .info {
-  font-size: 24px;
+  font-size: 1.333em;
 }
 
 .session,
@@ -24,4 +28,10 @@
 #session-length,
 #break-length {
   font-size: 32px;
+}
+
+#start_stop {
+  border: none;
+  padding: 1em 2em;
+  font-size: 1.333em;
 }
