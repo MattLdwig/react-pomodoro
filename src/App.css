@@ -9,7 +9,7 @@
 }
 
 .time-left {
-  font-size: 4.209em;
+  font-size: 6.854em;
 }
 
 .info {
@@ -30,8 +30,28 @@
   font-size: 32px;
 }
 
-#start_stop {
+.controls--core > button {
   border: none;
-  padding: 1em 2em;
+  padding: 1em 3em;
   font-size: 1.333em;
+  background: #FC5255;
+  color: #FFF;
+  margin: 1em;
+  cursor: pointer;
+}
+
+.controls--work {
+  margin: 1.33em 0 0.2em 0;
+}
+
+.controls--work > button,
+.controls--break > button {
+  border: none;
+  width: 200px;
+  height: 40px;
+  margin: 0.5em;
+  background: #75CBB0;
+  color: #FFF;
+  font-size: 1em;
+  cursor: pointer;
 }

@@ -137,10 +137,14 @@ class App extends Component {
             <button onClick={this.resetTimer} id="reset"><FontAwesomeIcon icon={faRedo} /></button>
           </div>
           <div className="controls--custom">
-            <button onClick={this.incrementWorkSession} id="session-increment"><FontAwesomeIcon icon={faAngleUp} /> Work Session</button>
-            <button onClick={this.decrementWorkSession} id="session-decrement"><FontAwesomeIcon icon={faAngleDown} /> Work Session</button>
-            <button onClick={this.incrementBreakSession} id="break-increment"><FontAwesomeIcon icon={faAngleUp} /> Break Session</button>
-            <button onClick={this.decrementBreakSession} id="break-decrement"><FontAwesomeIcon icon={faAngleDown} /> Break Session</button>
+            <div className="controls--work">
+              <button onClick={this.incrementWorkSession} id="session-increment"><FontAwesomeIcon icon={faAngleUp} />  Work Session</button>
+              <button onClick={this.decrementWorkSession} id="session-decrement"><FontAwesomeIcon icon={faAngleDown} />  Work Session</button>
+            </div>
+            <div className="controls--break">
+              <button onClick={this.incrementBreakSession} id="break-increment"><FontAwesomeIcon icon={faAngleUp} />  Break Session</button>
+              <button onClick={this.decrementBreakSession} id="break-decrement"><FontAwesomeIcon icon={faAngleDown} />  Break Session</button>
+            </div>
           </div>
           <Infos           
             break={this.state.breakTimeDisplayed} 
