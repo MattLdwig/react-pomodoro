@@ -3,8 +3,9 @@ import logo from './logo.svg';
 import './App.css';
 
 import Time from './Components/Time'
+import Sound from './sound.wav'
 
-let twentyToMilli = 1500000;
+let twentyToMilli = 2000;
 let fiveToMilli = 300000;
 
 class App extends Component {
@@ -12,7 +13,7 @@ class App extends Component {
     super();
     this.state = {
       time: this.getTime(twentyToMilli),
-      workTime: true,
+      workTime: false,
       interval: null,
       currentPhase: 1,
       breakTimeDisplayed : this.getTimeDisplayed(fiveToMilli),
@@ -37,7 +38,8 @@ class App extends Component {
       this.updateDisplay();
       this.setState({ 
         interval: setInterval(this.updateDisplay, 1000),
-        isOn: true
+        isOn: true,
+        workTime: true
        })
     } else {
       clearInterval(this.state.interval);
@@ -47,13 +49,16 @@ class App extends Component {
 
   resetTimer() {
     clearInterval(this.state.interval);
-    twentyToMilli = 1500000
-    fiveToMilli = 300000
+    twentyToMilli = 1500000;
+    fiveToMilli = 300000;
+    const audio = document.getElementById('beep');
+    audio.pause();
+    audio.currentTime = 0;
     this.setState({
       time: this.getTime(twentyToMilli),
       breakTimeDisplayed : this.getTimeDisplayed(fiveToMilli),
       workTimeDisplayed: this.getTimeDisplayed(twentyToMilli),
-      workTime: true,
+      workTime: false,
       interval: null,
       isOn: false
     })
@@ -71,33 +76,37 @@ class App extends Component {
 
   switchToNextPhase() {
     this.state.workTime ? this.setState({ time: this.getTime(fiveToMilli), workTime: false }) : this.setState({ time: this.getTime(twentyToMilli), workTime: true })
+    const audio = document.getElementById('beep');
+    audio.currentTime = 0;
+    audio.play().catch(err => {console.log(err);});
   }
 
   getTime(time) {
-    let min = Math.floor(time / 1000 / 60 % 60);
-    let sec = Math.floor(time / 1000 % 60);
+    let min = Math.floor(time / 1000 / 60 % 60) < 10 ? '0' + Math.floor(time / 1000 / 60 % 60) : Math.floor(time / 1000 / 60 % 60) ;
+    let sec = Math.floor(time / 1000 % 60) < 10 ? '0' + Math.floor(time / 1000 % 60) : Math.floor(time / 1000 % 60);
     let total = time;
     if (time === 3600000) {min = 60; sec = 0;} 
     return {total, min, sec};
   }
 
   getTimeDisplayed(time) {
-    const min = Math.floor(time / 1000 / 60 % 60);
-    return {min}
+    let min = Math.floor(time / 1000 / 60 % 60);
+    if (time === 3600000) {min = 60;} 
+    return {min};
   }
 
   incrementWorkSession() {
-    if (twentyToMilli < 3600000) { twentyToMilli = twentyToMilli + 60000 } else {  console.log(twentyToMilli);}
+    if (twentyToMilli < 3600000) { twentyToMilli = twentyToMilli + 60000 }
     this.setState({
       time: this.getTime(twentyToMilli),
-      workTimeDisplayed: this.getTime(twentyToMilli)
+      workTimeDisplayed: this.getTimeDisplayed(twentyToMilli)
     })
   }
 
   incrementBreakSession() {
     if (fiveToMilli < 3600000) { fiveToMilli = fiveToMilli + 60000 }
     this.setState({
-      breakTimeDisplayed: this.getTime(fiveToMilli)
+      breakTimeDisplayed: this.getTimeDisplayed(fiveToMilli)
     })
   }
 
@@ -105,14 +114,14 @@ class App extends Component {
     if (twentyToMilli > 60000) { twentyToMilli = twentyToMilli - 60000 }
     this.setState({
       time: this.getTime(twentyToMilli),
-      workTimeDisplayed: this.getTime(twentyToMilli)
+      workTimeDisplayed: this.getTimeDisplayed(twentyToMilli)
     })
   }
 
   decrementBreakSession() {
     if (fiveToMilli > 60000) { fiveToMilli = fiveToMilli - 60000 }
     this.setState({
-      breakTimeDisplayed: this.getTime(fiveToMilli)
+      breakTimeDisplayed: this.getTimeDisplayed(fiveToMilli)
     })
   }
 
@@ -124,7 +133,7 @@ class App extends Component {
           time={this.state.time} 
           break={this.state.breakTimeDisplayed} 
           session={this.state.workTimeDisplayed}
-          sessionInitialized={this.state.isOn} />
+          sessionInitialized={this.state.workTime} />
         <div className="controls">
           <button onClick={this.startTimer} id="start_stop">Start</button>
           <button onClick={this.resetTimer} id="reset">Reset</button>
@@ -132,6 +141,7 @@ class App extends Component {
           <button onClick={this.incrementBreakSession} id="break-increment">Increment break Session</button>
           <button onClick={this.decrementBreakSession} id="break-decrement">Decrement break Session</button>
           <button onClick={this.decrementWorkSession} id="session-decrement">Decrement work Session</button>
+          <audio id="beep" src={Sound}></audio>
         </div>
       </div>
     );
