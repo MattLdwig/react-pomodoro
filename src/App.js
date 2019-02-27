@@ -5,7 +5,7 @@ import './App.css';
 import Time from './Components/Time'
 import Sound from './sound.wav'
 
-let twentyToMilli = 2000;
+let twentyToMilli = 1500000;
 let fiveToMilli = 300000;
 
 class App extends Component {
@@ -35,7 +35,6 @@ class App extends Component {
 
   startTimer() {
     if(!this.state.isOn) {
-      this.updateDisplay();
       this.setState({ 
         interval: setInterval(this.updateDisplay, 1000),
         isOn: true,
